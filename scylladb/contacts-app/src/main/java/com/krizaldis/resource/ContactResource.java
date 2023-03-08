@@ -12,12 +12,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 @Path("/contacts")
 @Produces(MediaType.APPLICATION_JSON)
@@ -40,44 +35,34 @@ public class ContactResource {
   }
 
   private ContactQueryResponse toContactQueryResponse(Contact contact) {
-    return new ContactQueryResponse().setFirstName(contact.getFirstName())
-        .setLastName(contact.getLastName()).setAddress(contact.address()).setAge(contact.getAge());
+    return new ContactQueryResponse(
+        contact.getFirstName(),
+        contact.getLastName(),
+        contact.getAge(),
+        contact.address());
   }
 
   private Contact convertFromDto(ContactCommand dto) {
-    return new Contact(dto.getFirstName(), dto.getLastName(), dto.getAge(),
-        new Address(dto.getAddress().getStreet(), dto.getAddress().getCity(),
-            dto.getAddress().getZipcode()));
+    return new Contact(dto.firstName(), dto.lastName(), dto.age(),
+        new Address(dto.address().street(), dto.address().city(),
+            dto.address().zipcode()));
   }
 }
 
-@Data
-@Accessors(chain = true)
-class ContactQueryResponse {
+record ContactQueryResponse(String firstName,
+                            String lastName,
+                            Integer age,
+                            String address) {
 
-  private String firstName;
-  private String lastName;
-  private Integer age;
-  private String address;
 }
 
-@Data
-@Accessors(chain = true)
-class ContactCommand {
+record ContactCommand(String firstName,
+                      String lastName,
+                      Integer age,
+                      AddressDto address) {
 
-  private String firstName;
-  private String lastName;
-  private Integer age;
-  private AddressDto address;
 }
 
-@Setter
-@Getter
-@Accessors(chain = true)
-@NoArgsConstructor
-class AddressDto {
+record AddressDto(String city, String street, String zipcode) {
 
-  private String city;
-  private String street;
-  private String zipcode;
 }

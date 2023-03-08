@@ -31,7 +31,7 @@ public class Contact {
   public String address() {
 
     return format("%s %s %s",
-        address.getStreet(), address.getCity(), address.getZipCode());
+        address.street(), address.city(), address.zipCode());
   }
 }
 
